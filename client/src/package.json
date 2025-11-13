@@ -1,0 +1,10 @@
+{
+  "name": "rhymes-game-client",
+  "version": "2.0.0",
+  "dependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "socket.io-client": "^4.6.1",
+    "react-confetti": "^6.1.0"
+  }
+}
