@@ -38,9 +38,7 @@ function Lobby({ setScreen, setRoomCode, username, setUsername }) {
           <option value="points">Points</option>
           <option value="rounds">Rounds</option>
         </select>
-        {mode === 'rounds' &&
-          <input type="number" min="1" value={rounds} onChange={e => setRounds(e.target.value)} className="rounds-input" placeholder="Rounds" />
-        }
+        {mode === 'rounds' && <input type="number" min={1} value={rounds} onChange={e => setRounds(e.target.value)} className="rounds-input" placeholder="Rounds" />}
       </div>
     </div>
   );
