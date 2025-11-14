@@ -23,7 +23,7 @@ function createRoom(hostUsername, hostId) {
 
 function joinRoom(code, username, id) {
   if (!rooms[code]) return { success: false, message: 'Room does not exist.' };
-  if (rooms[code].players.find(p => p.id === id)) return { success: true };
+  if (rooms[code].players.find(p => p.id === id)) return { success: true, players: rooms[code].players };
   rooms[code].players.push({ username, id, score: 0, lives: 5, status: '', eliminated: false });
   return { success: true, players: rooms[code].players };
 }
@@ -86,7 +86,6 @@ function calculateScores(code, io) {
     const player = room.players.find(p => p.id === id);
     const matches = answerMap[answer].length;
     if (matches === 1) {
-      // No match: lose life, 0 points, elimination logic
       if (room.mode === 'points') {
         player.lives -= 1;
         player.status = 'QUACK'.slice(0, 5 - player.lives);
@@ -97,7 +96,6 @@ function calculateScores(code, io) {
     } else if (matches > 2) {
       player.score += 1;
     }
-    // Chuck bonuses
     const chuckPlayer = room.players.find(p => p.id === room.currentChuck);
     const chuckAnswer = room.answers.find(a => a.id === room.currentChuck)?.answer;
     if (player.id !== room.currentChuck && answer === chuckAnswer) {
@@ -107,7 +105,6 @@ function calculateScores(code, io) {
   });
 
   io.to(code).emit('answersReveal', { answers: room.answers, players: room.players });
-  // End-game condition
   if (room.mode === 'points' && (room.players.some(p => p.score >= 20) || room.players.filter(p => !p.eliminated).length <= 1)) {
     room.state = 'ended';
     const winner = room.players.sort((a, b) => b.score - a.score)[0];
